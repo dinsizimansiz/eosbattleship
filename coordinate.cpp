@@ -37,8 +37,10 @@ coordinate::coordinate(int x, int y):x(x),y(y) {
 
 }
 
+
+
 std::ostream& operator<<(std::ostream& os, const coordinate coord){
-    os << "Coordinate (" << (char)(coord.getx()+17) <<" ," << coord.gety() + 1 << " )";
+    os << "Coordinate (" << coord.getx() <<"," << coord.gety()  << ")";
     return os;
 }
 

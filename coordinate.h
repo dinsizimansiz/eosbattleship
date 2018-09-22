@@ -29,8 +29,8 @@ public:
 
 
 private:
-    const unsigned int x : 4;
-    const unsigned int y : 4;
+    const unsigned int x ;
+    const unsigned int y ;
 
 };
 
