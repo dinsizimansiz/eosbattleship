@@ -8,17 +8,37 @@
 #include <vector>
 #include "coordinate.cpp"
 #include "direction.h"
+#include <string>
+
+#define __CARRIER_SIZE__ 5
+#define __BATTLESHIP_SIZE__ 4
+#define __CRUISER_SIZE__ 3
+#define __SUBMARINE_SIZE__ 3
+#define __DESTROYER_SIZE__ 2
+
 class ship {
     
 public:
-    explicit ship(int);
 
-    const unsigned int getSize() const;
+    explicit ship(std::string&);
+
+    explicit ship(std::string &&);
+
+    unsigned int getSize() const;
+
+    std::string getName() const ;
 
     const std::vector<coordinate> getCoords(direction,coordinate);
 
+
+
 private:
-    const unsigned int size;
+
+    void _createShip();
+
+    unsigned int size;
+
+    std::string shipName;
 
 };
 

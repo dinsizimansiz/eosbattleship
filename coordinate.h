@@ -15,9 +15,9 @@ public:
 
     coordinate(int x,int y);
 
-    const unsigned int getx() const;
+    unsigned int getx() const;
 
-    const unsigned int gety() const ;
+    unsigned int gety() const ;
 
     static bool inTable(coordinate) ;
 
@@ -27,13 +27,13 @@ public:
 
     bool operator==(coordinate) const ;
 
+    static int convertToIndex(coordinate) ;
 
-
-
+    int convertToIndex() const;
 
 private:
-    const unsigned int x ;
-    const unsigned int y ;
+    unsigned int x ;
+    unsigned int y ;
 
 };
 

@@ -4,9 +4,14 @@
 
 #include "ship.h"
 #include "coordinate.h"
-ship::ship(int size):size(size)
+ship::ship(std::string & shipName ):shipName(shipName)
 {
+    _createShip();
+}
 
+ship::ship(std::string && shipName) : shipName(shipName)
+{
+    _createShip()
 }
 
 const std::vector<coordinate> ship::getCoords(direction dir, coordinate coords)
@@ -48,9 +53,42 @@ const std::vector<coordinate> ship::getCoords(direction dir, coordinate coords)
     return returnVector;
 }
 
-const unsigned int ship::getSize() const
+unsigned int ship::getSize() const
 {
     return size;
+}
+
+std::string ship::getName() const
+{
+    return shipName;
+}
+
+void ship::_createShip()
+{
+    if(shipName == "carrier")
+    {
+        size = __CARRIER_SIZE__;
+    }
+    else if(shipName == "battleship")
+    {
+        size = __BATTLESHIP_SIZE__;
+    }
+    else if(shipName == "cruiser")
+    {
+        size = __CRUISER_SIZE__;
+    }
+    else if(shipName == "submarine")
+    {
+        size = __SUBMARINE_SIZE__;
+    }
+    else if(shipName == "destroyer")
+    {
+        size = __DESTROYER_SIZE__;
+    }
+    else
+    {
+        ;
+    }
 }
 
 /*

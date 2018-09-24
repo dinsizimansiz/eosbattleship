@@ -8,7 +8,7 @@ int main()
 {
     unsigned int points = 0;
 
-    ship a(3);
+    ship a("submarine");
 
     if(a.getSize() == 3)
     {
