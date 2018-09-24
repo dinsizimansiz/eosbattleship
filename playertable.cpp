@@ -8,8 +8,11 @@
 
 playertable::playertable()
 {
-
     _initializeMap();
+}
+
+void playertable::_initalizeTable()
+{
     for(char& c : _playerTable)
     {
         c = '0';
@@ -18,13 +21,12 @@ playertable::playertable()
 
 void playertable::_initializeMap()
 {
-    ShipToInt.insert(std::make_pair("empty",'0'));
-    ShipToInt.insert(std::make_pair("unknown",'X'));
-    ShipToInt.insert(std::make_pair("carrier",'1'));
-    ShipToInt.insert(std::make_pair("battleship",'2'));
-    ShipToInt.insert(std::make_pair("cruiser",'3'));
-    ShipToInt.insert(std::make_pair("submarine",'4'));
-    ShipToInt.insert(std::make_pair("destroyer",'5'));
+    tableMapping.insert(std::make_pair("empty",'0'));
+    tableMapping.insert(std::make_pair("carrier",'1'));
+    tableMapping.insert(std::make_pair("battleship",'2'));
+    tableMapping.insert(std::make_pair("cruiser",'3'));
+    tableMapping.insert(std::make_pair("submarine",'4'));
+    tableMapping.insert(std::make_pair("destroyer",'5'));
 }
 
 bool playertable::placeShip(ship ship1, direction direction1,coordinate coordinate1) {
@@ -38,14 +40,12 @@ bool playertable::placeShip(ship ship1, direction direction1,coordinate coordina
         bool isPlaced = _placeShip(ship1,direction1,coordinate1);
         return isPlaced;
     }
-
-
 }
 
 bool playertable::removeShip(ship ship1)
 {
-    char shipCharacter = ShipToInt[ship1.getName()];
-    char emptyCharacter = ShipToInt["empty"];
+    char shipCharacter = tableMapping[ship1.getName()];
+    char emptyCharacter = tableMapping["empty"];
     bool isRemoved = false;
 
     for(char & c :_playerTable)
@@ -61,7 +61,7 @@ bool playertable::removeShip(ship ship1)
 
 bool playertable::shipExists(ship ship1)
 {
-    char shipCharacter = ShipToInt[ship1.getName()];
+    char shipCharacter = tableMapping[ship1.getName()];
 
     for(char &c : _playerTable)
     {
@@ -76,7 +76,7 @@ bool playertable::shipExists(ship ship1)
 bool playertable::_placeShip(ship ship1,direction direction1,coordinate coordinate1)
 {
     std::vector<coordinate> coords = ship1.getCoords(direction1,coordinate1);
-    char shipCharacter = ShipToInt[ship1.getName()];
+    char shipCharacter = tableMapping[ship1.getName()];
 
     for(auto &coord : coords)
     {

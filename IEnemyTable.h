@@ -6,18 +6,18 @@
 #define BATTLESHIP_IENEMYTABLE_H
 
 #include "coordinate.h"
-#include <vector>
 
 class IEnemyTable
 {
 public:
 
-    IEnemyTable() = delete;
+    virtual bool isAttacked(coordinate) = 0;
 
-    bool makeMove(coordinate) = 0;
+    virtual void setTableCell(coordinate,std::string) = 0 ;
 
-protected:
-    std::vector<int>  enemyTable;
+
+
+
 };
 
 #endif //BATTLESHIP_IENEMYTABLE_H

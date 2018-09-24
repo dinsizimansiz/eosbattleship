@@ -33,7 +33,9 @@ private:
 
     void _initializeMap() ;
 
-    std::map<std::string,char> ShipToInt;
+    void _initalizeTable();
+
+    std::map<std::string,char> tableMapping;
 
     char _playerTable[100];
 
