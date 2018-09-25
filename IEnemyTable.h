@@ -13,10 +13,7 @@ public:
 
     virtual bool isAttacked(coordinate) = 0;
 
-    virtual void setTableCell(coordinate,std::string) = 0 ;
-
-
-
+    virtual void setTableCell(coordinate,char) = 0 ;
 
 };
 

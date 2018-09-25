@@ -7,16 +7,16 @@
 
 #include <string>
 
-class IPrintMethods{
+class IPrintMethods
+{
 public:
 
-    IPrintMethods() = delete;
+    virtual std::string printenemytable() = 0;
 
-    virtual std::string PrintEnemyTable() = 0;
+    virtual std::string printplayertable() = 0;
 
-    virtual std::string PrintPlayerTable() = 0;
+    virtual std::string printbothtables() = 0;
 
-    virtual std::string PrintBothTables() = 0;
 };
 
 #endif //BATTLESHIP_IPRINTMETHODS_H

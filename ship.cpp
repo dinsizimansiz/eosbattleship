@@ -11,7 +11,7 @@ ship::ship(std::string & shipName ):shipName(shipName)
 
 ship::ship(std::string && shipName) : shipName(shipName)
 {
-    _createShip()
+    _createShip();
 }
 
 const std::vector<coordinate> ship::getCoords(direction dir, coordinate coords)

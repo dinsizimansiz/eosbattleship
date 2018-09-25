@@ -14,10 +14,9 @@ bool enemytable::isAttacked(coordinate coordinate1)
     return isAttacked;
 }
 
-void enemytable::setTableCell(coordinate coordinate1, std::string string)
+void enemytable::setTableCell(coordinate coordinate1, char shipCharacter)
 {
     int index = coordinate1.convertToIndex();
-    char shipCharacter = tableMapping[string];
     _enemyTable[index] = shipCharacter;
 }
 

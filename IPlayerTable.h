@@ -9,26 +9,15 @@
 
 #include "ship.h"
 
-struct CoordinateReturnValue{
-    coordinate coord;
-    bool isAvaible;
-};
-
-class IPlayerTable {
-
+class IPlayerTable
+{
 public:
-
 
     virtual bool placeShip(ship,direction,coordinate) = 0;
     
     virtual bool removeShip(ship) = 0;
 
     virtual bool shipExists(ship) = 0;
-
-
-protected:
-
-
 
 };
 

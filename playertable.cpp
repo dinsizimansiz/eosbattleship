@@ -9,13 +9,14 @@
 playertable::playertable()
 {
     _initializeMap();
+    _initalizeTable();
 }
 
 void playertable::_initalizeTable()
 {
     for(char& c : _playerTable)
     {
-        c = '0';
+        c = tableMapping["empty"];
     }
 }
 
@@ -120,10 +121,26 @@ std::string playertable::toString()
     return ss.str();
 }
 
+const char playertable::operator[](int index) const
+{
+    const char returnChar = _playerTable[index];
+    return returnChar;
+}
+
+const char playertable::operator[](coordinate coordinate1) const
+{
+    int index = coordinate1.convertToIndex();
+    const char returnChar = _playerTable[index];
+    return returnChar;
+}
+
+
 std::ostream& operator<<(std::ostream & os , playertable pt)
 {
     std::string ptString = pt.toString();
     os << ptString;
     return os;
 }
+
+
 

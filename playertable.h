@@ -27,6 +27,10 @@ public:
 
     friend std::ostream& operator<<(std::ostream&, playertable);
 
+    const char operator[](int) const;
+
+    const char operator[](coordinate) const ;
+
 private:
 
     bool _placeShip(ship,direction,coordinate);

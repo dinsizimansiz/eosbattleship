@@ -15,9 +15,9 @@ public:
 
     enemytable();
 
-    bool isAttacked(coordinate coordinate1) override;
+    bool isAttacked(coordinate ) override;
 
-    void setTableCell(coordinate coordinate1, std::string string) override;
+    void setTableCell(coordinate , char ) override;
 
     std::string toString() ;
 
