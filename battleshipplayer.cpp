@@ -7,10 +7,19 @@
 #include "battleshipplayer.h"
 #include "playertable.cpp"
 #include "enemytable.cpp"
+#include <algorithm>
 
-battleshipplayer::battleshipplayer() :_playerTable(),_enemyTable()
+
+
+battleshipplayer::battleshipplayer() :_playerTable(),_enemyTable(),numberOfHits(0)
 {
+    _initializeShipYard();
+    ready = false;
+}
 
+void battleshipplayer::_initializeShipYard()
+{
+    _shipYard = {ship("cruiser"),ship("battleship"),ship("submarine"),ship("destroyer"),ship("carrier")};
 }
 
 std::string battleshipplayer::printenemytable()
@@ -66,7 +75,13 @@ char battleshipplayer::getCell(coordinate coordinate1) const
 
 bool battleshipplayer::placeShip(ship& ship1, coordinate coordinate1, direction direction1)
 {
-    _playerTable.placeShip(ship1,direction1,coordinate1);
+    bool isPlaced = _playerTable.placeShip(ship1,direction1,coordinate1);
+    if(isPlaced)
+    {
+        auto itr = std::find(_shipYard.begin(),_shipYard.end(),ship1);
+        _shipYard.erase(itr);
+    }
+    return isPlaced;
 }
 
 void battleshipplayer::setCell(coordinate coordinate1, char addedChar)
@@ -76,5 +91,51 @@ void battleshipplayer::setCell(coordinate coordinate1, char addedChar)
 
 bool battleshipplayer::removeShip(ship& ship1)
 {
-    _playerTable.removeShip(ship1);
+    bool isRemoved = _playerTable.removeShip(ship1);
+    if(isRemoved)
+    {
+        _shipYard.emplace_back(ship1.getName());
+    }
+    return isRemoved;
+}
+
+bool battleshipplayer::placedAllShips() const
+{
+    return _shipYard.empty();
+}
+
+bool battleshipplayer::getReady()
+{
+    if(placedAllShips())
+    {
+        ready = true;
+    }
+
+    return ready;
+}
+
+std::vector<ship> battleshipplayer::getRemainingShips() const
+{
+    return _shipYard;
+}
+
+void battleshipplayer::getUnready()
+{
+    ready = false;
+
+}
+
+bool battleshipplayer::isAttacked(coordinate& coordinate1) const
+{
+    return _enemyTable.isAttacked(coordinate1);
+}
+
+void battleshipplayer::hitShip()
+{
+    numberOfHits++;
+}
+
+unsigned int battleshipplayer::getNumberOfHits() const
+{
+    return numberOfHits;
 }

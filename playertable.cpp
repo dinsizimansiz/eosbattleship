@@ -8,7 +8,6 @@
 
 playertable::playertable()
 {
-    _initializeMap();
     _initalizeTable();
 }
 
@@ -16,18 +15,8 @@ void playertable::_initalizeTable()
 {
     for(char& c : _playerTable)
     {
-        c = tableMapping["empty"];
+        c = TableMapping["empty"];
     }
-}
-
-void playertable::_initializeMap()
-{
-    tableMapping.insert(std::make_pair("empty",'0'));
-    tableMapping.insert(std::make_pair("carrier",'1'));
-    tableMapping.insert(std::make_pair("battleship",'2'));
-    tableMapping.insert(std::make_pair("cruiser",'3'));
-    tableMapping.insert(std::make_pair("submarine",'4'));
-    tableMapping.insert(std::make_pair("destroyer",'5'));
 }
 
 bool playertable::placeShip(ship ship1, direction direction1,coordinate coordinate1) {
@@ -45,8 +34,8 @@ bool playertable::placeShip(ship ship1, direction direction1,coordinate coordina
 
 bool playertable::removeShip(ship ship1)
 {
-    char shipCharacter = tableMapping[ship1.getName()];
-    char emptyCharacter = tableMapping["empty"];
+    char shipCharacter = TableMapping[ship1.getName()];
+    char emptyCharacter = TableMapping["empty"];
     bool isRemoved = false;
 
     for(char & c :_playerTable)
@@ -62,7 +51,7 @@ bool playertable::removeShip(ship ship1)
 
 bool playertable::shipExists(ship ship1)
 {
-    char shipCharacter = tableMapping[ship1.getName()];
+    char shipCharacter = TableMapping[ship1.getName()];
 
     for(char &c : _playerTable)
     {
@@ -77,7 +66,7 @@ bool playertable::shipExists(ship ship1)
 bool playertable::_placeShip(ship ship1,direction direction1,coordinate coordinate1)
 {
     std::vector<coordinate> coords = ship1.getCoords(direction1,coordinate1);
-    char shipCharacter = tableMapping[ship1.getName()];
+    char shipCharacter = TableMapping[ship1.getName()];
 
     for(auto &coord : coords)
     {

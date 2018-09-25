@@ -7,6 +7,7 @@
 
 #include "IPlayerTable.h"
 #include "IPrintMethods.h"
+#include "TableMapping.h"
 #include <map>
 
 
@@ -35,11 +36,7 @@ private:
 
     bool _placeShip(ship,direction,coordinate);
 
-    void _initializeMap() ;
-
     void _initalizeTable();
-
-    std::map<std::string,char> tableMapping;
 
     char _playerTable[100];
 

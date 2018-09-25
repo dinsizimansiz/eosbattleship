@@ -4,13 +4,18 @@
 
 #include <sstream>
 #include "enemytable.h"
+#include "TableMapping.h"
 
 
+enemytable::enemytable()
+{
+    _initializeTable();
+}
 
-bool enemytable::isAttacked(coordinate coordinate1)
+bool enemytable::isAttacked(coordinate coordinate1) const
 {
     int index = coordinate1.convertToIndex();
-    bool isAttacked = _enemyTable[index] != tableMapping["unknown"];
+    bool isAttacked = _enemyTable[index] != TableMapping["unknown"];
     return isAttacked;
 }
 
@@ -20,28 +25,11 @@ void enemytable::setTableCell(coordinate coordinate1, char shipCharacter)
     _enemyTable[index] = shipCharacter;
 }
 
-enemytable::enemytable()
-{
-    _initalizeMap();
-    _initializeTable();
-}
-
-void enemytable::_initalizeMap()
-{
-    tableMapping.insert(std::make_pair("empty",'0'));
-    tableMapping.insert(std::make_pair("unknown",'X'));
-    tableMapping.insert(std::make_pair("carrier",'1'));
-    tableMapping.insert(std::make_pair("battleship",'2'));
-    tableMapping.insert(std::make_pair("cruiser",'3'));
-    tableMapping.insert(std::make_pair("submarine",'4'));
-    tableMapping.insert(std::make_pair("destroyer",'5'));
-}
-
 void enemytable::_initializeTable()
 {
     for(char &c : _enemyTable)
     {
-        c = tableMapping["unknown"];
+        c = TableMapping["unknown"];
     }
 }
 

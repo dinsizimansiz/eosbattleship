@@ -91,6 +91,12 @@ void ship::_createShip()
     }
 }
 
+std::ostream& operator<<(std::ostream& os,const ship& ship1)
+{
+    os << ship1.getName();
+    return os;
+}
+
 /*
  *   0 1 2 3 4 5 6 7 8 9
  * 0 0 0 0 0 0 0 0 0 0 0

@@ -11,7 +11,7 @@ class IEnemyTable
 {
 public:
 
-    virtual bool isAttacked(coordinate) = 0;
+    virtual bool isAttacked(coordinate) const = 0;
 
     virtual void setTableCell(coordinate,char) = 0 ;
 

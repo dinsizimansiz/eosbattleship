@@ -25,16 +25,37 @@ public:
 
     bool placeShip(ship&,coordinate,direction);
 
-    void setCell(coordinate,char);
+    void setCell(coordinate, char);
 
     bool removeShip(ship&);
 
+    bool placedAllShips() const;
+
+    bool getReady();
+
+    std::vector<ship> getRemainingShips() const;
+
+    void getUnready();
+
+    bool isAttacked(coordinate&) const ;
+
+    void hitShip();
+
+    unsigned int getNumberOfHits() const;
+
 private:
+
+    void _initializeShipYard();
 
     enemytable _enemyTable;
 
     playertable _playerTable;
 
+    std::vector<ship> _shipYard;
+
+    bool ready;
+
+    unsigned int numberOfHits;
 };
 
 

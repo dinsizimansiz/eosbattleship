@@ -30,7 +30,7 @@ public:
 
     const std::vector<coordinate> getCoords(direction,coordinate);
 
-
+    friend std::ostream& operator<<(std::ostream&,const ship&);
 
 private:
 

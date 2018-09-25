@@ -8,6 +8,8 @@
 
 #include "IEnemyTable.h"
 #include <map>
+#include "TableMapping.h"
+
 
 class enemytable : IEnemyTable
 {
@@ -15,23 +17,20 @@ public:
 
     enemytable();
 
-    bool isAttacked(coordinate ) override;
+    bool isAttacked(coordinate ) const override  ;
 
     void setTableCell(coordinate , char ) override;
 
     std::string toString() ;
 
-    friend std::ostream& operator<<(std::ostream&,enemytable);
+    friend std::ostream& operator<<(std::ostream&,enemytable&);
 
 private:
-
-    void _initalizeMap();
 
     void _initializeTable();
 
     char _enemyTable[100];
 
-    std::map<std::string,char>  tableMapping;
 };
 
 
