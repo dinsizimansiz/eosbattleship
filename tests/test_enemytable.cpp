@@ -2,8 +2,8 @@
 // Created by oguz on 24.09.2018.
 //
 
-#include "../enemytable.cpp"
-#include "../coordinate.cpp"
+#include "../battleship/enemytable.cpp"
+#include "../battleship/coordinate.cpp"
 
 int main()
 {

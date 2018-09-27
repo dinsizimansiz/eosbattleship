@@ -5,23 +5,24 @@
 
 #include "user.h"
 
+#include<eosiolib/eosio.hpp>
+
 //TODO Game beginning will be handled by a higher degree class.
 //TODO Turns will be handled by higher degree class.
 //TODO If coordinate is outside the map , then handle it at a higher degree class.
 
 #define MAX_NUMBER_OF_ATTACKS 17
 
-class [[eosio::table]] game
+class [[eosio::table]] gameproto
 {
 public:
 
-    game(account_name gameid,account_name host,account_name competitor)
+    gameproto(account_name gameid,account_name host,account_name competitor)
     :host(host),competitor(competitor),finished(false),started(false),turn(0)
     {
         this->gameid = gameid;
     }
 
-    account_name gameid;
 
 
     account_name primary_key() const
@@ -29,12 +30,12 @@ public:
         return gameid;
     }
 
-    account_name get_host() const
+    account_name host_key() const
     {
         return host.owner;
     }
 
-    account_name get_competitor() const
+    account_name competitor_key() const
     {
         return competitor.owner;
     }
@@ -125,6 +126,7 @@ public:
     {
         user& player = get_player(name);
         user& opponent = get_opponent(name);
+
         if(player.bsplayer.isAttacked(coordinate1))
         {
             return false;
@@ -133,7 +135,7 @@ public:
         {
             char cell = opponent.bsplayer.getCell(coordinate1);
             player.bsplayer.setCell(coordinate1,cell);
-            isFinished(name,cell);
+            tryToFinish(name, cell);
             turn++;
             return true;
         }
@@ -157,7 +159,20 @@ public:
         return player.bsplayer.printbothtables();
     }
 
-    void isFinished(account_name name,char cellType) noexcept(false)
+    bool isFinished() const
+    {
+        return finished;
+    }
+
+    bool isStarted() const
+    {
+        return started;
+    }
+
+
+private:
+
+    void tryToFinish(account_name name, char cellType) noexcept(false)
     {
         if(cellType != TableMapping["empty"] && cellType != TableMapping["unknown"])
         {
@@ -166,12 +181,11 @@ public:
             unsigned int numberOfHits = player.bsplayer.getNumberOfHits();
             if(numberOfHits == MAX_NUMBER_OF_ATTACKS)
             {
+
                 throw(finish(name));
             }
         }
     }
-
-private:
 
     bool finished ;
 
@@ -182,6 +196,8 @@ private:
     user host;
 
     user competitor;
+
+    account_name gameid;
 
 };
 

@@ -2,7 +2,7 @@
 // Created by oguz on 24.09.2018.
 //
 
-#include "../playertable.cpp"
+#include "../battleship/playertable.cpp"
 
 int main()
 {

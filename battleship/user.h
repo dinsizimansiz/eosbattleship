@@ -2,11 +2,15 @@
 // Created by oguz on 25.09.2018.
 //
 
+
+
 #ifndef BATTLESHIP_USER_H
 #define BATTLESHIP_USER_H
 
-#include <eosiolib/eosio.hpp>
+
 #include "battleshipplayer.h"
+#include<eosiolib/eosio.hpp>
+
 
 struct user
 {

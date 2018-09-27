@@ -1,0 +1,3 @@
+# eosbattleship
+
+Multiplayable battleship gameproto

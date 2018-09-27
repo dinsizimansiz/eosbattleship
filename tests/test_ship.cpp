@@ -2,7 +2,7 @@
 // Created by oguz on 23.09.2018.
 //
 
-#include "../ship.cpp"
+#include "../battleship/ship.cpp"
 
 int main()
 {
