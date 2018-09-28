@@ -681,7 +681,8 @@ namespace battleship
                 if(name1 == host)
                 {
                     return compet;
-                }else
+                }
+                else
                 {
                     return host;
                 }
@@ -718,7 +719,9 @@ namespace battleship
                 if(ishost(name1))
                 {
                     return hosttable;
-                } else{
+                }
+                else
+                {
                     return compettable;
                 }
             }

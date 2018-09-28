@@ -1,0 +1,69 @@
+{
+    "____comment": "This file was generated with eosio-abigen. DO NOT EDIT Fri Sep 28 22:39:29 2018",
+    "version": "eosio::abi/1.0",
+    "structs": [
+        {
+            "name": "game",
+            "base": "",
+            "fields": [
+                {
+                    "name": "host",
+                    "type": "name"
+                },
+                {
+                    "name": "compet",
+                    "type": "name"
+                },
+                {
+                    "name": "winner",
+                    "type": "name"
+                },
+                {
+                    "name": "hostenemy",
+                    "type": "table"
+                },
+                {
+                    "name": "hosttable",
+                    "type": "table"
+                },
+                {
+                    "name": "compettable",
+                    "type": "table"
+                },
+                {
+                    "name": "competenemy",
+                    "type": "table"
+                },
+                {
+                    "name": "started",
+                    "type": "_Bool"
+                },
+                {
+                    "name": "finished",
+                    "type": "_Bool"
+                },
+                {
+                    "name": "readyStates",
+                    "type": "_Bool>"
+                },
+                {
+                    "name": "round",
+                    "type": "int32"
+                }
+            ]
+        }
+    ],
+    "types": [],
+    "actions": [],
+    "tables": [
+        {
+            "name": "games",
+            "type": "game",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        }
+    ],
+    "ricardian_clauses": [],
+    "abi_extensions": []
+}
