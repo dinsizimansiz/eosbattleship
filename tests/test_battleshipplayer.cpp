@@ -2,7 +2,7 @@
 // Created by oguz on 25.09.2018.
 //
 
-#include "../battleship/battleshipplayer.cpp"
+#include "../old/battleshipplayer.cpp"
 
 int main()
 {

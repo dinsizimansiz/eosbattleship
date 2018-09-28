@@ -2,16 +2,16 @@
 // Created by oguz on 24.09.2018.
 //
 
-#include "../battleship/enemytable.cpp"
-#include "../battleship/coordinate.cpp"
+#include "../old/enemytable.cpp"
+#include "../coordinate.cpp"
 
 int main()
 {
     enemytable et = enemytable();
     int points = 0;
 
-    et.setTableCell(coordinate(0,0),"empty");
-    et.setTableCell(coordinate(0,1),"empty");
+    et.setTableCell(coordinate(0,0),TableMapping["empty"]);
+    et.setTableCell(coordinate(0,1),TableMapping["empty"]);
 
     bool isAttacked = et.isAttacked(coordinate(0,1));
 

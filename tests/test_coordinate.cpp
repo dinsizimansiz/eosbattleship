@@ -2,7 +2,7 @@
 // Created by oguz on 23.09.2018.
 //
 
-#include "../battleship/coordinate.cpp"
+#include "../coordinate.cpp"
 #include <iostream>
 #include <sstream>
 
