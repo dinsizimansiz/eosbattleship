@@ -10,24 +10,24 @@
 //Includes business logic functions
 
 
-    class coordinate {
+    class Coordinate {
     public:
 
-        coordinate(int x, int y);
+        Coordinate(int x, int y);
 
         unsigned int getx() const;
 
         unsigned int gety() const;
 
-        static bool inTable(coordinate);
+        static bool inTable(Coordinate);
 
         bool inTable();
 
-        friend std::ostream &operator<<(std::ostream &, coordinate);
+        friend std::ostream &operator<<(std::ostream &, Coordinate);
 
-        bool operator==(coordinate) const;
+        bool operator==(Coordinate) const;
 
-        static int convertToIndex(coordinate);
+        static int convertToIndex(Coordinate);
 
         int convertToIndex() const;
 

@@ -2,13 +2,13 @@
 // Created by oguz on 23.09.2018.
 //
 
-#include "../coordinate.cpp"
+#include "../Coordinate.cpp"
 #include <iostream>
 #include <sstream>
 
 int main()
 {
-    coordinate deneme = coordinate(3,4);
+    Coordinate deneme = Coordinate(3,4);
     int points = 0;
 
     if(deneme.getx() == 3 && deneme.gety() == 4)
@@ -21,9 +21,9 @@ int main()
     {
         points += 10;
     }
-    coordinate xOutside = coordinate(20,5);
-    coordinate yOutside = coordinate(9,20);
-    coordinate onEdge = coordinate(0,9);
+    Coordinate xOutside = Coordinate(20,5);
+    Coordinate yOutside = Coordinate(9,20);
+    Coordinate onEdge = Coordinate(0,9);
 
     bool firstIsAtOutside = !xOutside.inTable();
     bool secondIsAtOutside = !yOutside.inTable();
@@ -34,13 +34,13 @@ int main()
         points += 20;
     }
 
-    if(deneme == coordinate(3,4))
+    if(deneme == Coordinate(3,4))
     {
         points += 10;
     }
 
     std::stringstream a;
-    a << coordinate(3,4);
+    a << Coordinate(3,4);
 
     std::string as = a.str();
 

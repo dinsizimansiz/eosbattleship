@@ -6,8 +6,8 @@
 #define BATTLESHIP_SHIP_H
 
 #include <vector>
-#include "coordinate.cpp"
-#include "direction.h"
+#include "Coordinate.cpp"
+#include "Direction.h"
 #include <string>
 
 #define __CARRIER_SIZE__ 5
@@ -17,23 +17,23 @@
 #define __DESTROYER_SIZE__ 2
 
 
-    class ship {
+    class Ship {
 
     public:
 
-        explicit ship(std::string &);
+        explicit Ship(std::string &);
 
-        explicit ship(std::string &&);
+        explicit Ship(std::string &&);
 
         unsigned int getSize() const;
 
         std::string getName() const;
 
-        const std::vector<coordinate> getCoords(direction, coordinate);
+        const std::vector<Coordinate> getCoords(Direction, Coordinate);
 
-        bool operator==(ship) const;
+        bool operator==(Ship) const;
 
-        friend std::ostream &operator<<(std::ostream &, const ship &);
+        friend std::ostream &operator<<(std::ostream &, const Ship &);
 
     private:
 

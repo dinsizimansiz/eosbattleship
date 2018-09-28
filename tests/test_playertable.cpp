@@ -119,9 +119,9 @@ int main()
  *
  *  this placement can be done in two ways :
  *
- *   1-) getCoords(DOWN,coordinate(0,4))
+ *   1-) getCoords(DOWN,Coordinate(0,4))
  *
- *   2-) getCoords(UP,coordinate(0,8))
+ *   2-) getCoords(UP,Coordinate(0,8))
  *
  */
 

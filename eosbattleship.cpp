@@ -9,8 +9,10 @@
 #include <vector>
 #include <sstream>
 #include <map>
-#include "ship.cpp"
+#include "Ship.cpp"
 
+#define  __MAX_TOTAL_HITS__ 17
+#define __MAX_SHIP_CELLS__ 17
 
 namespace battleship
 {
@@ -69,63 +71,211 @@ namespace battleship
         }
 
         [[action]]
-        void placeship()
+        void placeship(account_name name1,string shipName,int x,int y,string dir)
         {
+            require_auth(name1);
+
+            eosio_assert(isPlaying(name1),"User is not in the game.");
+            eosio_assert(isShip(shipName),"Invalid Ship name.");
+            eosio_assert(isDirection(dir),"Invalid directory name.");
+
+            Coordinate coord = Coordinate(x,y);
+            Direction direction = stringToDir(dir);
+            Ship ship = Ship(shipName);
+
+            eosio_assert(shipCoordsInTable(ship, coord, direction),"Ship coordinates are out of range.");
+
+            account_name host = getHost(name1);
+            auto itr = _games.find(host);
+            bool canBePlaced;
+            _games.modify(itr,get_self(),[&](game& g){
+                canBePlaced = g.placeShip(name1,ship,coord,direction);
+            });
+
+            eosio_assert(canBePlaced,"Ship cannot be placed.");
+        }
+
+        [[action]]
+        void removeship(account_name name1 ,string shipName)
+        {
+            require_auth(name1);
+
+            eosio_assert(isPlaying(name1),"User is not in the game.");
+            eosio_assert(isShip(shipName),"Invalid Ship name.");
+
+            Ship ship = Ship(shipName);
+
+            account_name host = getHost(name1);
+            auto itr = _games.find(host);
+            bool canBeRemoved;
+            _games.modify(itr,get_self(),[&](game& g){
+                canBeRemoved = g.removeShip(name1,ship);
+            });
+
+            eosio_assert(canBeRemoved,"Ship is not found.");
 
         }
 
         [[action]]
-        void removeship()
+        void unplacedships(account_name name1)
         {
+            require_auth(name1);
+
+            eosio_assert(isPlaying(name1),"User is not in the game.");
+
+            account_name host = getHost(name1);
+            auto itr = _games.find(host);
+
+            _games.modify(itr,get_self(),[&](game& g){
+                string remShips = g.getUnplacedShips(name1);
+                print(remShips);
+            });
 
         }
 
         [[action]]
-        void unplacedships()
+        void placedships(account_name name1)
         {
+            require_auth(name1);
+
+            eosio_assert(isPlaying(name1),"User is not in the game.");
+
+            account_name host = getHost(name1);
+            auto itr = _games.find(host);
+
+            _games.modify(itr,get_self(),[&](game& g){
+                string ships = g.getPlacedShips(name1);
+                print(ships);
+            });
+        }
+
+        [[action]]
+        void makemove(account_name name1,int x , int y)
+        {
+            require_auth(name1);
+
+            Coordinate coord = Coordinate(x,y);
+
+            eosio_assert(isPlaying(name1),"User is not in the game.");
+            eosio_assert(coord.inTable(),"Coordinates are not in table.");
+
+            account_name host = getHost(name1);
+            auto itr = _games.find(host);
+            bool canBeMoved;
+
+            _games.modify(itr,get_self(),[&](game& g){
+                eosio_assert(g.isturn(name1),"It is not User's turn.");
+                canBeMoved = g.makemove(name1,coord);
+            });
+
+            eosio_assert(canBeMoved,"Coordinates are already hit.");
 
         }
 
         [[action]]
-        void placedships()
+        void bothtables(account_name name1)
         {
+            require_auth(name1);
 
+            eosio_assert(isPlaying(name1),"User is not in the game.");
+
+            account_name host = getHost(name1);
+            auto itr = _games.find(host);
+
+            _games.modify(itr,get_self(),[&](game& g){
+                string tmp = g.printBothTables(name1);
+                print(tmp);
+            });
         }
 
         [[action]]
-        void makemove()
+        void enemytable(account_name name1)
         {
+            require_auth(name1);
 
+            eosio_assert(isPlaying(name1),"User is not in the game.");
+
+            account_name host = getHost(name1);
+            auto itr = _games.find(host);
+
+            _games.modify(itr,get_self(),[&](game& g){
+                string tmp = g.printEnemyTable(name1);
+                print(tmp);
+            });
         }
 
         [[action]]
-        void bothtables()
+        void playertable(account_name name1)
         {
+            require_auth(name1);
 
+            eosio_assert(isPlaying(name1),"User is not in the game.");
+
+            account_name host = getHost(name1);
+            auto itr = _games.find(host);
+
+            _games.modify(itr,get_self(),[&](game& g){
+                string tmp = g.printEnemyTable(name1);
+                print(tmp);
+            });
         }
 
         [[action]]
-        void enemytable()
+        void ready(account_name name1)
         {
+            require_auth(name1);
 
+            eosio_assert(isPlaying(name1),"User is not in the game.");
+
+            account_name host = getHost(name1);
+            auto itr = _games.find(host);
+            bool canBeReady;
+
+            _games.modify(itr,get_self(),[&](game& g){
+                canBeReady = g.setPlayerReady(name1);
+            });
+
+            eosio_assert(canBeReady,"User cannot be ready");
         }
 
         [[action]]
-        void playertable()
+        void unready(account_name name1)
         {
+            require_auth(name1);
 
+            eosio_assert(isPlaying(name1),"User is not in the game.");
+
+            account_name host = getHost(name1);
+            auto itr = _games.find(host);
+
+            _games.modify(itr,get_self(),[&](game& g){
+                g.setPlayerUnready(name1);
+            });
         }
 
         [[action]]
-        void ready()
+        void isready(account_name name1)
         {
+            require_auth(name1);
 
-        }
+            eosio_assert(isPlaying(name1),"User is not in the game.");
 
-        [[action]]
-        void unready()
-        {
+            account_name host = getHost(name1);
+            auto itr = _games.find(host);
+            bool isReady;
 
+            _games.modify(itr,get_self(),[&](game& g){
+                isReady = g.playerIsReady(name1);
+            });
+
+            if(isReady)
+            {
+                print("User is ready.");
+            }
+            else
+            {
+                print("User is not ready.");
+            }
         }
 
     private:
@@ -139,11 +289,105 @@ namespace battleship
                 _games.emplace(get_self(),[&](game& g){
                     g.host = host;
                     g.compet = compet;
+                    g.readyStates.insert(std::pair<account_name,bool>(host,false));
+                    g.readyStates.insert(std::pair<account_name,bool>(compet,true));
                 });
 
                 _queue.clear();
             }
         }
+
+        static Direction stringToDir(string dir) {
+            if (dir == "UP")
+            {
+                return UP;
+            }
+            else if (dir == "DOWN")
+            {
+                return DOWN;
+            }
+            else if (dir == "LEFT")
+            {
+                return LEFT;
+            }
+            else if (dir == "RIGHT")
+            {
+                return RIGHT;
+            }
+        }
+
+
+
+        static bool isDirection(string dir)
+        {
+
+            if (dir != "UP" || dir != "DOWN" || dir != "LEFT" || dir != "RIGHT")
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        static bool isShip(string shipName)
+        {
+            if(shipName != "battleship" || shipName != "carrier" || shipName != "cruiser" || shipName != "destroyer" || shipName != "carrier")
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        bool isPlaying(account_name name1)
+        {
+            for(const game& gm : _games)
+            {
+                if((gm.compet == name1 || gm.host == name1) && !gm.finished)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        bool shipCoordsInTable(Ship ship, Coordinate coord, Direction dir)
+        {
+            vector<Coordinate> coords = ship.getCoords(dir,coord);
+            for(Coordinate coord:coords)
+            {
+                if(!coord.inTable())
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        account_name getHost(account_name name1)
+        {
+            for(const game& gm : _games)
+            {
+                if(gm.host == name1 && !gm.finished)
+                {
+                    return name1;
+                }
+                else if(gm.compet == name1 && !gm.finished)
+                {
+                    return gm.host;
+                }
+                else
+                {
+                    continue;
+                }
+            }
+        }
+
 
         struct [[eosio::table]] game
         {
@@ -162,17 +406,17 @@ namespace battleship
 
             account_name host;
             account_name compet;
+            account_name winner;
             table hostenemy;
             table hosttable;
             table compettable;
             table competenemy;
             bool started;
             bool finished;
-
-
+            map<account_name,bool> readyStates ;
             int round;
 
-            account_name primary_key() const {return host;   }
+            account_name primary_key() const {return host; }
 
             bool ishost(account_name name1)
             {
@@ -189,21 +433,71 @@ namespace battleship
                 if(ishost(name1) && round%2 == 0)
                 {
                     return true;
-                }else if(iscompet(name1) && round%2)
+                }
+                else if(iscompet(name1) && round%2)
                 {
                     return true;
-                } else{
+                }
+                else
+                {
                     return false;
                 }
             }
 
+            bool setPlayerReady(account_name name1)
+            {
+                if(playerCanBeReady(name1))
+                {
+                    readyStates[name1] = true;
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
 
-            bool placeShip(account_name name1, ship shp , coordinate k,direction dir)
+            }
+
+            void setPlayerUnready(account_name name1)
+            {
+                readyStates[name1] = false;
+            }
+
+            bool playerCanBeReady(account_name name1)
+            {
+                table playerTable = getPlayerTable(name1);
+                uint8_t shipCells = 0;
+
+                for(const uint8_t &i : playerTable)
+                {
+                    if(i != playerTableMapping["empty"])
+                    {
+                        shipCells++;
+                    }
+                }
+
+                return shipCells == __MAX_SHIP_CELLS__;
+            }
+
+            bool playerIsReady(account_name name1)
+            {
+                return readyStates[name1];
+            }
+
+            bool placeShip(account_name name1, Ship shp , Coordinate k,Direction dir)
             {
                 table& playerTable = getPlayerTable(name1);
 
+                for(uint8_t i : playerTable)
+                {
+                    if(i == playerTableMapping[shp.getName()])
+                    {
+                        return false;
+                    }
+                }
+
                 auto coords = shp.getCoords(dir,k);
-                for(coordinate& coord : coords)
+                for(Coordinate& coord : coords)
                 {
                     if(coord.inTable() || playerTable[coord.convertToIndex()] != playerTableMapping["empty"])
                     {
@@ -211,7 +505,7 @@ namespace battleship
                     }
                 }
 
-                for(coordinate& coord : coords)
+                for(Coordinate& coord : coords)
                 {
                     playerTable[coord.convertToIndex()] = playerTableMapping[shp.getName()];
                 }
@@ -219,10 +513,11 @@ namespace battleship
                 return true;
             }
 
-            bool removeShip(account_name name1, ship shp)
+            bool removeShip(account_name name1, Ship shp)
             {
                 table &playerTable = getPlayerTable(name1);
                 bool isRemoved = false;
+
 
                 for(uint8_t &i : playerTable)
                 {
@@ -232,29 +527,55 @@ namespace battleship
                         isRemoved = true;
                     }
                 }
+                if(playerIsReady(name1) && isRemoved)
+                {
+                    setPlayerUnready(name1);
+
+                }
+
                 return isRemoved;
             }
 
-            //TODO : isturn will be handled in battleship class.
-            //TODO : is in board will be handled in battleship class.
 
-            bool makemove(account_name name1, coordinate k)
+            bool makemove(account_name name1, Coordinate k)
             {
                 table& enemyTable = getEnemyTable(name1);
 
                 if(enemyTable[k.convertToIndex()] != enemyTableMapping["unknown"])
                 {
                     return false;
-                } else{
+
+                }
+                else
+                {
 
                     table enemyPlayerTable = getPlayerTable(getOpponent(name1));
                     enemyTable[k.convertToIndex()] = enemyPlayerTable[k.convertToIndex()];
+                    isItFinished(name1);
                     round++;
                     return true;
                 }
 
             }
 
+            void isItFinished(account_name name1)
+            {
+                table &enemyTable = getEnemyTable(name1);
+                uint8_t totalHits;
+
+                for(uint8_t &c : enemyTable)
+                {
+                    if(c != enemyTableMapping["unknown"] && c != enemyTableMapping["empty"])
+                    {
+                        totalHits++;
+                    }
+                }
+                if(totalHits == __MAX_TOTAL_HITS__)
+                {
+                    finished = true;
+                    winner = name1;
+                }
+            }
 
 
             string getPlacedShips(account_name name1)
@@ -267,7 +588,7 @@ namespace battleship
                 {
                     string shipName = reversePlayerTableMapping[i];
                     auto itr = find(strVector.begin(),strVector.end(),shipName);
-                    if(isship(shipName) && itr != strVector.end())
+                    if(isShip(shipName) && itr != strVector.end())
                     {
                         strVector.erase(itr);
                     }
@@ -290,7 +611,7 @@ namespace battleship
                 for(const int &i : playerTable)
                 {
                     string shipName = reversePlayerTableMapping[i];
-                    if(isship(shipName) && find(strVector.begin(),strVector.end(),shipName) == strVector.end())
+                    if(isShip(shipName) && find(strVector.begin(),strVector.end(),shipName) == strVector.end())
                     {
                         strVector.emplace_back(shipName);
                     }
@@ -307,17 +628,17 @@ namespace battleship
             string printPlayerTable(account_name name1)
             {
                 table playerTable = getPlayerTable(name1);
-                
+
                 return toString(playerTable,playerPrintMapping);
             }
 
             string printEnemyTable(account_name name1)
             {
                 table enemyTable = getEnemyTable(name1);
-                
+
                 return toString(enemyTable,enemyPrintMapping);
             }
-            
+
             string printBothTables(account_name name1)
             {
                 string playerTableString = printPlayerTable(name1);
@@ -423,54 +744,6 @@ namespace battleship
 
 
 
-
-
-        static direction stringtodir(string dir) {
-            if (dir == "UP")
-            {
-                return UP;
-            }
-            else if (dir == "DOWN")
-            {
-                return DOWN;
-            }
-            else if (dir == "LEFT")
-            {
-                return LEFT;
-            }
-            else if (dir == "RIGHT")
-            {
-                return RIGHT;
-            }
-        }
-
-        static bool isdirectory(string dir)
-        {
-
-            if (dir != "UP" || dir != "DOWN" || dir != "LEFT" || dir != "RIGHT")
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
-
-        static bool isship(string shipName)
-        {
-            if(shipName != "battleship" || shipName != "carrier" || shipName != "cruiser" || shipName != "destroyer" || shipName != "carrier")
-            {
-                return false;
-            }
-            else
-            {
-                return true;
-            }
-        }
-
-
-
         typedef vector<account_name> userbase;
 
         typedef multi_index<N(games),game> gamebase;
@@ -480,6 +753,6 @@ namespace battleship
         userbase _queue;
     };
 
-    EOSIO_ABI(battleship,(enqueue)(dequeue)(ready)(unready)(placeship)(removeship)(placedships)(unplacedships)(makemove)(bothtables)(enemytable)(playertable));
+    EOSIO_ABI(battleship,(isready)(enqueue)(dequeue)(ready)(unready)(placeship)(removeship)(placedships)(unplacedships)(makemove)(bothtables)(enemytable)(playertable));
 }
 

@@ -2,14 +2,14 @@
 // Created by oguz on 23.09.2018.
 //
 
-#include "coordinate.h"
+#include "Coordinate.h"
 
 
-    bool coordinate::inTable() {
-        return coordinate::inTable(*this);
+    bool Coordinate::inTable() {
+        return Coordinate::inTable(*this);
     }
 
-    bool coordinate::inTable(coordinate coord) {
+    bool Coordinate::inTable(Coordinate coord) {
         const unsigned int xCoord = coord.getx();
         const unsigned int yCoord = coord.gety();
 
@@ -19,35 +19,35 @@
         return firstCondition && secondCondition;
     }
 
-    unsigned int coordinate::gety() const {
+    unsigned int Coordinate::gety() const {
         return y;
     }
 
-    unsigned int coordinate::getx() const {
+    unsigned int Coordinate::getx() const {
         return x;
     }
 
-    bool coordinate::operator==(coordinate otherCoord) const {
+    bool Coordinate::operator==(Coordinate otherCoord) const {
         bool firstCondition = this->getx() == otherCoord.getx();
         bool secondCondition = this->gety() == otherCoord.gety();
 
         return firstCondition && secondCondition;
     }
 
-    coordinate::coordinate(int x, int y) : x(x), y(y) {
+    Coordinate::Coordinate(int x, int y) : x(x), y(y) {
 
     }
 
-    std::ostream &operator<<(std::ostream &os, const coordinate coord) {
+    std::ostream &operator<<(std::ostream &os, const Coordinate coord) {
         os << "Coordinate (" << coord.getx() << "," << coord.gety() << ")";
         return os;
     }
 
-    int coordinate::convertToIndex(coordinate coord) {
+    int Coordinate::convertToIndex(Coordinate coord) {
         int index = coord.gety() * 10 + coord.getx();
         return index;
     }
 
-    int coordinate::convertToIndex() const {
-        return coordinate::convertToIndex(*this);
+    int Coordinate::convertToIndex() const {
+        return Coordinate::convertToIndex(*this);
     }

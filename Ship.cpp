@@ -1,20 +1,20 @@
 //
 // Created by oguz on 23.09.2018.
 //
-#include "ship.h"
-#include "coordinate.h"
+#include "Ship.h"
+#include "Coordinate.h"
 
 
-    ship::ship(std::string &shipName) : shipName(shipName) {
+    Ship::Ship(std::string &shipName) : shipName(shipName) {
         _createShip();
     }
 
-    ship::ship(std::string &&shipName) : shipName(shipName) {
+    Ship::Ship(std::string &&shipName) : shipName(shipName) {
         _createShip();
     }
 
-    const std::vector<coordinate> ship::getCoords(direction dir, coordinate coords) {
-        std::vector<coordinate> returnVector;
+    const std::vector<Coordinate> Ship::getCoords(Direction dir, Coordinate coords) {
+        std::vector<Coordinate> returnVector;
         const int xCoord = coords.getx();
         const int yCoord = coords.gety();
 
@@ -46,15 +46,15 @@
         return returnVector;
     }
 
-    unsigned int ship::getSize() const {
+    unsigned int Ship::getSize() const {
         return size;
     }
 
-    std::string ship::getName() const {
+    std::string Ship::getName() const {
         return shipName;
     }
 
-    void ship::_createShip() {
+    void Ship::_createShip() {
         if (shipName == "carrier") {
             size = __CARRIER_SIZE__;
         } else if (shipName == "battleship") {
@@ -68,11 +68,11 @@
         }
     }
 
-    bool ship::operator==(ship ship1) const {
+    bool Ship::operator==(Ship ship1) const {
         return shipName == ship1.getName();
     }
 
-    std::ostream &operator<<(std::ostream &os, const ship &ship1) {
+    std::ostream &operator<<(std::ostream &os, const Ship &ship1) {
         os << ship1.getName();
         return os;
     }
@@ -93,8 +93,8 @@
  *
  *  this placement can be done in two ways :
  *
- *   1-) getCoords(DOWN,coordinate(0,4))
+ *   1-) getCoords(DOWN,Coordinate(0,4))
  *
- *   2-) getCoords(UP,coordinate(0,8))
+ *   2-) getCoords(UP,Coordinate(0,8))
  *
  */
