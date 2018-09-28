@@ -45,8 +45,8 @@ namespace battleship
 
         }
 
-        [[eosio::action]]
-        void getready(account_name user1)
+        [[action]]
+        void enqueue(account_name user1)
         {
             require_auth(user1);
 
@@ -57,8 +57,8 @@ namespace battleship
             matchmaking();
         }
 
-        [[eosio::action]]
-        void getunready(account_name user1)
+        [[action]]
+        void dequeue(account_name user1)
         {
             require_auth(user1);
 
@@ -68,7 +68,65 @@ namespace battleship
             _queue.erase(itr);
         }
 
+        [[action]]
+        void placeship()
+        {
 
+        }
+
+        [[action]]
+        void removeship()
+        {
+
+        }
+
+        [[action]]
+        void unplacedships()
+        {
+
+        }
+
+        [[action]]
+        void placedships()
+        {
+
+        }
+
+        [[action]]
+        void makemove()
+        {
+
+        }
+
+        [[action]]
+        void bothtables()
+        {
+
+        }
+
+        [[action]]
+        void enemytable()
+        {
+
+        }
+
+        [[action]]
+        void playertable()
+        {
+
+        }
+
+        [[action]]
+        void ready()
+        {
+
+        }
+
+        [[action]]
+        void unready()
+        {
+
+        }
 
     private:
 
@@ -422,6 +480,6 @@ namespace battleship
         userbase _queue;
     };
 
-    EOSIO_ABI(battleship,(getready)(getunready));
+    EOSIO_ABI(battleship,(enqueue)(dequeue)(ready)(unready)(placeship)(removeship)(placedships)(unplacedships)(makemove)(bothtables)(enemytable)(playertable));
 }
 
