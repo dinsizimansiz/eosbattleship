@@ -47,7 +47,7 @@ namespace battleship
 
         }
 
-        [[eosio::action]]
+        ///@abi action
         void enqueue(account_name user1)
         {
             require_auth(user1);
@@ -59,7 +59,7 @@ namespace battleship
             matchmaking();
         }
 
-        [[eosio::action]]
+        ///@abi action
         void dequeue(account_name user1)
         {
             require_auth(user1);
@@ -70,7 +70,7 @@ namespace battleship
             _queue.erase(itr);
         }
 
-        [[eosio::action]]
+        ///@abi action
         void placeship(account_name name1,string shipName,int x,int y,string dir)
         {
             require_auth(name1);
@@ -95,7 +95,7 @@ namespace battleship
             eosio_assert(canBePlaced,"Ship cannot be placed.");
         }
 
-        [[eosio::action]]
+        ///@abi action
         void removeship(account_name name1 ,string shipName)
         {
             require_auth(name1);
@@ -116,7 +116,7 @@ namespace battleship
 
         }
 
-        [[eosio::action]]
+        ///@abi action
         void freeships(account_name name1)
         {
             require_auth(name1);
@@ -133,7 +133,7 @@ namespace battleship
 
         }
 
-        [[eosio::action]]
+        ///@abi action
         void placedships(account_name name1)
         {
             require_auth(name1);
@@ -149,7 +149,7 @@ namespace battleship
             });
         }
 
-        [[eosio::action]]
+        ///@abi action
         void makemove(account_name name1,int x , int y)
         {
             require_auth(name1);
@@ -172,7 +172,7 @@ namespace battleship
 
         }
 
-        [[eosio::action]]
+        ///@abi action
         void bothtables(account_name name1)
         {
             require_auth(name1);
@@ -188,7 +188,7 @@ namespace battleship
             });
         }
 
-        [[eosio::action]]
+        ///@abi action
         void enemytable(account_name name1)
         {
             require_auth(name1);
@@ -204,7 +204,7 @@ namespace battleship
             });
         }
 
-        [[eosio::action]]
+        ///@abi action
         void playertable(account_name name1)
         {
             require_auth(name1);
@@ -220,7 +220,7 @@ namespace battleship
             });
         }
 
-        [[eosio::action]]
+        ///@abi action
         void ready(account_name name1)
         {
             require_auth(name1);
@@ -238,7 +238,7 @@ namespace battleship
             eosio_assert(canBeReady,"User cannot be ready");
         }
 
-        [[eosio::action]]
+        ///@abi action
         void unready(account_name name1)
         {
             require_auth(name1);
@@ -253,7 +253,7 @@ namespace battleship
             });
         }
 
-        [[eosio::action]]
+        ///@abi action
         void isready(account_name name1)
         {
             require_auth(name1);
@@ -388,8 +388,8 @@ namespace battleship
             }
         }
 
-
-        struct [[eosio::table]] game
+        ///@abi table
+        struct  game
         {
             game()
             {
