@@ -12,6 +12,6 @@ include_directories(BEFORE ${EOSIO_CDT} ${Boost_INCLUDE_DIR} ${EXTERNALS})
 add_subdirectory(./tests)
 link_directories(${Boost_LIBRARY_DIR})
 
-add_executable(eosbattleship eosbattleship.cpp)
+add_executable(eosbattleship abi/eosbattleship.cpp)
 
 add_executable(scratchfile /home/oguz/.CLion2018.2/config/scratches/scratch.cpp)
