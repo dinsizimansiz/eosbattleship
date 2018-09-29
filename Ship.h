@@ -17,33 +17,33 @@
 #define __DESTROYER_SIZE__ 2
 
 
-    class Ship {
+class Ship {
 
-    public:
+public:
 
-        explicit Ship(std::string &);
+    explicit Ship(std::string &);
 
-        explicit Ship(std::string &&);
+    explicit Ship(std::string &&);
 
-        unsigned int getSize() const;
+    unsigned int getSize() const;
 
-        std::string getName() const;
+    std::string getName() const;
 
-        const std::vector<Coordinate> getCoords(Direction, Coordinate);
+    const std::vector<Coordinate> getCoords(Direction, Coordinate);
 
-        bool operator==(Ship) const;
+    bool operator==(Ship) const;
 
-        friend std::ostream &operator<<(std::ostream &, const Ship &);
+    friend std::ostream &operator<<(std::ostream &, const Ship &);
 
-    private:
+private:
 
-        void _createShip();
+    void _createShip();
 
-        unsigned int size;
+    unsigned int size;
 
-        std::string shipName;
+    std::string shipName;
 
-    };
+};
 
 
 #endif //BATTLESHIP_SHIP_H

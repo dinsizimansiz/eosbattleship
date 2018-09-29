@@ -5,7 +5,7 @@
 #ifndef BATTLESHIP_DIRECTIONS_H
 #define BATTLESHIP_DIRECTIONS_H
 
-    enum Direction {
-        UP, RIGHT, DOWN, LEFT
-    };
+enum Direction {
+    UP, RIGHT, DOWN, LEFT
+};
 #endif //BATTLESHIP_DIRECTIONS_H

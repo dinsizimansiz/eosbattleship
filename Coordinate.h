@@ -10,31 +10,31 @@
 //Includes business logic functions
 
 
-    class Coordinate {
-    public:
+class Coordinate {
+public:
 
-        Coordinate(int x, int y);
+    Coordinate(int x, int y);
 
-        unsigned int getx() const;
+    unsigned int getx() const;
 
-        unsigned int gety() const;
+    unsigned int gety() const;
 
-        static bool inTable(Coordinate);
+    static bool inTable(Coordinate);
 
-        bool inTable();
+    bool inTable();
 
-        friend std::ostream &operator<<(std::ostream &, Coordinate);
+    friend std::ostream &operator<<(std::ostream &, Coordinate);
 
-        bool operator==(Coordinate) const;
+    bool operator==(Coordinate) const;
 
-        static int convertToIndex(Coordinate);
+    static int convertToIndex(Coordinate);
 
-        int convertToIndex() const;
+    int convertToIndex() const;
 
-    private:
-        unsigned int x;
-        unsigned int y;
+private:
+    unsigned int x;
+    unsigned int y;
 
-    };
+};
 
 #endif //BATTLESHIP_COORDINATE_H
