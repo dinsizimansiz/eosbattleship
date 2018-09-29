@@ -33,7 +33,6 @@ public:
 
     bool operator==(Ship) const;
 
-    friend std::ostream &operator<<(std::ostream &, const Ship &);
 
 private:
 

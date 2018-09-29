@@ -7,7 +7,6 @@
 #include <eosiolib/eosio.hpp>
 #include <eosiolib/multi_index.hpp>
 #include <vector>
-#include <sstream>
 #include <map>
 #include "../Ship.cpp"
 
@@ -18,7 +17,6 @@ namespace battleship
 {
     using std::vector ;
     using std::string;
-    using std::stringstream;
     using std::map;
     using std::make_pair;
     using std::find;
@@ -71,7 +69,7 @@ namespace battleship
         }
 
         ///@abi action
-        void placeship(account_name name1,string shipName,int x,int y,string dir)
+        void placeship(account_name name1,string shipName,uint8_t x,uint8_t y,string dir)
         {
             require_auth(name1);
 
@@ -150,7 +148,7 @@ namespace battleship
         }
 
         ///@abi action
-        void makemove(account_name name1,int x , int y)
+        void makemove(account_name name1, uint8_t x , uint8_t y)
         {
             require_auth(name1);
 
@@ -289,8 +287,6 @@ namespace battleship
                 _games.emplace(get_self(),[&](game& g){
                     g.host = host;
                     g.compet = compet;
-                    g.readyStates.insert(std::pair<account_name,bool>(host,false));
-                    g.readyStates.insert(std::pair<account_name,bool>(compet,true));
                 });
 
                 _queue.clear();
@@ -389,14 +385,14 @@ namespace battleship
         }
 
         ///@abi table
-        struct  game
+        struct game
         {
             game()
             {
-                hosttable = vector<uint8_t >(100,0);
-                hostenemy = vector<uint8_t >(100,0);
-                compettable = vector<uint8_t >(100,0);
-                competenemy = vector<uint8_t >(100,0);
+                hosttable = table(100,0);
+                hostenemy = table(100,0);
+                compettable = table(100,0);
+                competenemy = table(100,0);
                 finished = false;
                 started = false;
                 round = 0;
@@ -413,8 +409,8 @@ namespace battleship
             table competenemy;
             bool started;
             bool finished;
-            map<account_name,bool> readyStates ;
-            int round;
+            std::vector<bool> readyStates = {false,false};
+            uint8_t round;
 
             account_name primary_key() const {return host; }
 
@@ -448,7 +444,15 @@ namespace battleship
             {
                 if(playerCanBeReady(name1))
                 {
-                    readyStates[name1] = true;
+                    if(ishost(name1))
+                    {
+                        readyStates[0] = true;
+                    }
+                    else
+                    {
+                        readyStates[1] = true;
+                    }
+
                     return true;
                 }
                 else
@@ -458,9 +462,29 @@ namespace battleship
 
             }
 
+            void startTheGame()
+            {
+                if(readyStates[0] && readyStates[1])
+                {
+                    started = true;
+                }
+                else
+                {
+                    ;
+                }
+
+            }
+
             void setPlayerUnready(account_name name1)
             {
-                readyStates[name1] = false;
+                if(ishost(name1))
+                {
+                    readyStates[0] = false;
+                }
+                else
+                {
+                    readyStates[1] = false;
+                }
             }
 
             bool playerCanBeReady(account_name name1)
@@ -582,7 +606,7 @@ namespace battleship
             {
                 const table& playerTable = getPlayerTable(name1);
                 vector<string> strVector;
-                stringstream ss;
+                string retString;
 
                 for(const uint8_t &i : playerTable)
                 {
@@ -594,21 +618,22 @@ namespace battleship
                     }
                 }
 
-                for(string shipName :  strVector)
+                for(const string& shipName :  strVector)
                 {
-                    ss << shipName << endl;
+                    retString += shipName;
+                    retString += "\n";
                 }
 
-                return ss.str();
+                return retString;
             }
 
             string getUnplacedShips(account_name name1)
             {
                 const table& playerTable = getPlayerTable(name1);
                 vector<string> strVector;
-                stringstream ss;
+                string retString;
 
-                for(const int &i : playerTable)
+                for(const uint8_t &i : playerTable)
                 {
                     string shipName = reversePlayerTableMapping[i];
                     if(isShip(shipName) && find(strVector.begin(),strVector.end(),shipName) == strVector.end())
@@ -619,10 +644,11 @@ namespace battleship
 
                 for(string shipName :  strVector)
                 {
-                    ss << shipName << endl;
+                    retString += shipName ;
+                    retString +="\n";
                 }
 
-                return ss.str();
+                return retString;
             }
 
             string printPlayerTable(account_name name1)
@@ -643,38 +669,48 @@ namespace battleship
             {
                 string playerTableString = printPlayerTable(name1);
                 string enemyTableString = printEnemyTable(name1);
-
+                string outputString ;
                 string tmp;
 
-                stringstream tableStream(playerTableString);
-                stringstream enemyStream(enemyTableString);
-                stringstream outputStream;
 
-                vector<string> playerTableAllLines;
-                vector<string> enemyTableAllLines;
+                vector<string> playerTableAllLines = splitString(playerTableString,"\n");
+                vector<string> enemyTableAllLines = splitString(enemyTableString,"\n");
 
-                outputStream << "\n\t\t" << "Your Table" << "\t\t\t\t" << "            " << "Enemy Table" << "\n\n";
+                outputString += "\n\t\tYour Table\t\t\t\t            Enemy Table\n\n";
 
-                while(getline(tableStream,tmp))
-                    playerTableAllLines.emplace_back(tmp);
-
-                while(getline(enemyStream,tmp))
-                    enemyTableAllLines.emplace_back(tmp);
 
 
                 for(auto it1 = playerTableAllLines.begin(),it2 = enemyTableAllLines.begin();it1 != playerTableAllLines.end(); ++it1,++it2 )
                 {
-                    outputStream << "\t\t";
-                    outputStream << *it1 ;
-                    outputStream << "\t\t\t\t";
-                    outputStream << *it2 ;
-                    outputStream << "\n";
+                    outputString += "\t\t";
+                    outputString += *it1 ;
+                    outputString += "\t\t\t\t";
+                    outputString += *it2 ;
+                    outputString += "\n";
                 }
 
-                return outputStream.str();
+                return outputString;
             }
 
         private:
+
+            //Includes business logic.
+            //Not a general split function.
+
+            vector<string> splitString(string s, string delimiter)
+            {
+                vector<string> retVector;
+                size_t pos = 0;
+                std::string token;
+                while ((pos = s.find(delimiter)) != std::string::npos) {
+                    token = s.substr(0, pos);
+                    retVector.emplace_back(token);
+                    s.erase(0, pos + delimiter.length());
+                }
+                retVector.emplace_back(s);
+
+                return retVector;
+            }
 
             account_name getOpponent(account_name name1)
             {
@@ -691,27 +727,27 @@ namespace battleship
 
             string toString(table tbl,map<uint8_t ,char> mapping)
             {
-                stringstream ss;
+                string n;
 
-                ss << " ";
-                for(int i = 0; i <= 9;i++)
+                n += " ";
+                for(uint8_t i = 0; i <= 9;i++)
                 {
-                    ss << " ";
-                    ss << i;
+                    n += " ";
+                    n += i;
                 }
-                ss << "\n";
-                for(int i = 0; i <= 9;i++)
+                n += "\n";
+                for(uint8_t i = 0; i <= 9;i++)
                 {
-                    ss << i;
+                    n += i;
 
-                    for(int j = 0; j <= 9;j++)
+                    for(uint8_t j = 0; j <= 9;j++)
                     {
-                        ss << " ";
-                        ss << mapping[tbl[i*10+j]];
+                        n += " ";
+                        n += mapping[tbl[i*10+j]];
                     }
-                    ss << "\n";
+                    n += "\n";
                 }
-                return ss.str();
+                return n;
             }
 
             table& getPlayerTable(account_name name1)

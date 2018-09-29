@@ -5,10 +5,7 @@
 #ifndef BATTLESHIP_COORDINATE_H
 #define BATTLESHIP_COORDINATE_H
 
-#include <iostream>
-
 //Includes business logic functions
-
 
 class Coordinate {
 public:
@@ -22,8 +19,6 @@ public:
     static bool inTable(Coordinate);
 
     bool inTable();
-
-    friend std::ostream &operator<<(std::ostream &, Coordinate);
 
     bool operator==(Coordinate) const;
 

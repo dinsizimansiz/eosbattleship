@@ -35,11 +35,6 @@ Coordinate::Coordinate(int x, int y) : x(x), y(y) {
 
 }
 
-std::ostream &operator<<(std::ostream &os, const Coordinate coord) {
-    os << "Coordinate (" << coord.getx() << "," << coord.gety() << ")";
-    return os;
-}
-
 int Coordinate::convertToIndex(Coordinate coord) {
     int index = coord.gety() * 10 + coord.getx();
     return index;

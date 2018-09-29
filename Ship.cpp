@@ -72,10 +72,6 @@ bool Ship::operator==(Ship ship1) const {
     return shipName == ship1.getName();
 }
 
-std::ostream &operator<<(std::ostream &os, const Ship &ship1) {
-    os << ship1.getName();
-    return os;
-}
 
 
 /*

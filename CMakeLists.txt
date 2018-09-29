@@ -15,3 +15,5 @@ link_directories(${Boost_LIBRARY_DIR})
 add_executable(eosbattleship abi/eosbattleship.cpp)
 
 add_executable(scratchfile /home/oguz/.CLion2018.2/config/scratches/scratch.cpp)
+
+
