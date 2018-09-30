@@ -29,7 +29,7 @@ public:
     }
 
     ///@abi action
-    void version()
+    void version(account_name player)
     {
         print("1.0.0");
     }
