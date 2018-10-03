@@ -47,6 +47,20 @@ public:
     //@abi action
     void finishgame(account_name gameid) ;
 
+    //@abi action
+    void playertable(account_name playerid);
+
+    //@abi action
+    void enemytable(account_name playerid);
+
+    //@abi action
+    void bothtables(account_name playerid);
+
+    //@abi action
+    void remships(account_name playerid);
+
+    //@abi action
+    void curships(account_name playerid);
 
 private:
 
@@ -177,6 +191,108 @@ private:
 
         }
 
+        string printboard(const vector<string>& vec)
+        {
+            uint8_t counter = 0;
+            string retString ;
+            retString.append(" ");
+            for(uint8_t i = 0; i < 10;i++)
+            {
+                retString += " ";
+                retString.append(std::to_string(i));
+            }
+            retString += "\n";
+            for(uint8_t i = 0;i < 10 ; i++)
+            {
+                retString.append(std::to_string(i));
+                for(uint8_t j = 0;j < 10; j++)
+                {
+                    retString += " ";
+                    retString.append(vec[i*10+j]);
+                }
+                retString += "\n";
+            }
+            return retString;
+        }
+        string everyboard(const vector<string>& playertable,const vector<string>& enemytable)
+        {
+            uint8_t counter = 0;
+            string retString ;
+            string space = "\t\t\t\t\t\t";
+            retString.append(" ");
+            for(uint8_t i = 0; i < 10;i++)
+            {
+                retString += " ";
+                retString.append(std::to_string(i));
+                retString += space;
+                retString += " ";
+                retString.append(std::to_string(i));
+            }
+            retString += "\n";
+            for(uint8_t i = 0;i < 10 ; i++)
+            {
+                retString.append(std::to_string(i));
+                for(uint8_t j = 0;j < 10; j++)
+                {
+                    retString += " ";
+                    retString.append(playertable[i*10+j]);
+                    retString += space;
+                    retString += " ";
+                    retString.append(enemytable[i*10+j]);
+                }
+                retString += "\n";
+            }
+            return retString;
+        }
+
+        string currentships(const player& player)
+        {
+            vector<string> allships = {"carrier","battleship","submarine","cruiser","destroyer"};
+            string retString;
+            for(const string &s : player.playertable)
+            {
+                if(s == "1" || s == "2" || s == "3" || s == "4" || s == "5")
+                {
+                    string shipname = reverseTableMapping[s];
+                    auto itr = find(allships.begin(),allships.end(),shipname);
+                    if(itr != allships.end())
+                    {
+                        allships.erase(itr);
+                    }
+                }
+            }
+            for(const string &s : allships)
+            {
+                retString += "\n";
+                retString += s;
+            }
+            retString += "\n";
+            return retString;
+        }
+
+        string remainingships(const player& player)
+        {
+            string retString;
+            vector<string> remships;
+            for(const string &s : player.playertable)
+            {
+                if(s == "1" || s == "2" || s == "3" || s == "4" || s == "5")
+                {
+                    string shipname = reverseTableMapping[s];
+                    auto itr = find(remships.begin(),remships.end(),shipname);
+                    remships.emplace_back(shipname);
+                }
+            }
+            for(const string &s : remships)
+            {
+                retString += "\n";
+                retString += s;
+            }
+            retString += "\n";
+            return retString;
+        }
+
+
         EOSLIB_SERIALIZE(game,(gameid)(host)(challenger)(round)(started))
     };
 
@@ -215,13 +331,15 @@ private:
         return counter == 17;
     }
 
+
+
     typedef multi_index<N(games),game> gamebase;
 
     gamebase _games;
 
 };
 
-EOSIO_ABI(battleship,(creategame)(placeship)(removeship)(makemove)(ingame)(ready)(unready)(finishgame))
+EOSIO_ABI(battleship,(creategame)(placeship)(removeship)(makemove)(ingame)(ready)(unready)(finishgame)(playertable)(enemytable)(bothtables)(remships)(curships))
 
 
 

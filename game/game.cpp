@@ -124,3 +124,76 @@ void battleship::unready(account_name name) {
         pl.ready = false;
     });
 }
+
+void battleship::playertable(account_name playerid) {
+
+    require_auth(playerid);
+    eosio_assert(_ingame(playerid),"User is not in a game.");
+    account_name gameid = getgameid(playerid);
+    auto itr = _games.find(gameid);
+    string table;
+    _games.modify(itr,get_self(),[&](game& g){
+        player& pl = g.getplayer(playerid);
+        table = g.printboard(pl.playertable);
+    });
+    print(table);
+}
+
+void battleship::enemytable(account_name playerid) {
+
+    require_auth(playerid);
+    eosio_assert(_ingame(playerid),"User is not in a game.");
+    account_name gameid = getgameid(playerid);
+    auto itr = _games.find(gameid);
+    string table;
+    _games.modify(itr,get_self(),[&](game& g){
+        player& pl = g.getplayer(playerid);
+        table = g.printboard(pl.enemytable);
+    });
+    print(table);
+}
+
+void battleship::bothtables(account_name playerid) {
+
+    require_auth(playerid);
+    eosio_assert(_ingame(playerid),"User is not in a game.");
+    account_name gameid = getgameid(playerid);
+    auto itr = _games.find(gameid);
+    string bothTables;
+    _games.modify(itr,get_self(),[&](game& g){
+        player& pl = g.getplayer(playerid);
+        bothTables = g.everyboard(pl.playertable,pl.enemytable);
+    });
+    print(bothTables);
+
+}
+
+void battleship::remships(account_name playerid) {
+
+    require_auth(playerid);
+    eosio_assert(_ingame(playerid),"User is not in a game.");
+    account_name gameid = getgameid(playerid);
+    auto itr = _games.find(gameid);
+    string remShips;
+    _games.modify(itr,get_self(),[&](game& g){
+        eosio_assert(!g.started,"Game is already started");
+        player& pl = g.getplayer(playerid);
+        remShips = g.remainingships(pl);
+    });
+    print(remShips);
+}
+
+void battleship::curships(account_name playerid) {
+
+    require_auth(playerid);
+    eosio_assert(_ingame(playerid),"User is not in a game.");
+    account_name gameid = getgameid(playerid);
+    auto itr = _games.find(gameid);
+    string curShips;
+    _games.modify(itr,get_self(),[&](game& g){
+        eosio_assert(!g.started,"Game is already started");
+        player& pl = g.getplayer(playerid);
+        curShips= g.remainingships(pl);
+    });
+    print(curShips);
+}
