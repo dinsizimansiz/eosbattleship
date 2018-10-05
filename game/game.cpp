@@ -7,7 +7,9 @@
 void battleship::creategame(account_name host, account_name challenger) {
 
     require_auth(N(queue));
-
+    require_recipient(host);
+    require_recipient(challenger);
+    
     _games.emplace(get_self(),[&](game& gm){
         gm.gameid = _games.available_primary_key();
         gm.host.playerid = host;
