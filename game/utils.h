@@ -19,7 +19,7 @@ using std::map;
 using std::get;
 
 map<string,string> tableMapping = {{"empty","0"},{"unknown","X"},{"cruiser","1"},{"battleship","2"},{"submarine","3"},{"cruiser","4"},{"destroyer","5"}};
-
+map<string,string> reverseTableMapping = {{"1","cruiser"},{"2","battleship"},{"3","submarine"},{"4","cruiser"},{"5","destroyer"}};
 
 struct Utils {
 
