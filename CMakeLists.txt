@@ -9,8 +9,6 @@ set(EOSIO_CDT /usr/local/eosio.cdt/include/)
 
 include_directories(BEFORE ${EOSIO_CDT} ${Boost_INCLUDE_DIR} ${EXTERNALS})
 
-add_executable(ALLFILES queue/queue.cpp queue/queue.h game/game.cpp game/game.h)
-
 link_directories(${Boost_LIBRARY_DIR})
 
 
