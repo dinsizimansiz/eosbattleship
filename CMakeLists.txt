@@ -8,6 +8,7 @@ set(Boost_LIBRARY_DIR //home/oguz/opt/boost/lib)
 set(EOSIO_CDT /usr/local/eosio.cdt/include/)
 
 include_directories(BEFORE ${EOSIO_CDT} ${Boost_INCLUDE_DIR} ${EXTERNALS})
+add_executable(NESE contract.cpp)
 
 link_directories(${Boost_LIBRARY_DIR})
 
