@@ -87,8 +87,6 @@ public:
         for(const string & line : table)
         {
             print(line);
-            print("\n");
-
         }
     }
 
@@ -108,7 +106,6 @@ public:
         for(const string& line : table)
         {
             print(line);
-            print("\n");
         }
     }
 
@@ -129,8 +126,6 @@ public:
         for(const string& line : bothTables)
         {
             print(line);
-            print("\n");
-
         }
 
     }
@@ -152,8 +147,6 @@ public:
         for(const string &line : remShips)
         {
             print(line);
-            print("\n");
-
         }
     }
 
@@ -174,8 +167,6 @@ public:
         for(const string& line : curShips)
         {
             print(line);
-            print("\n");
-
         }
 
     }
