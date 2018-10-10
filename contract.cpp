@@ -86,7 +86,7 @@ public:
         });
         for(const string & line : table)
         {
-            print(line);
+            print(line," ");
         }
     }
 
@@ -105,7 +105,7 @@ public:
 
         for(const string& line : table)
         {
-            print(line);
+            print(line," ");
         }
     }
 
@@ -125,7 +125,7 @@ public:
 
         for(const string& line : bothTables)
         {
-            print(line);
+            print(line," ");
         }
 
     }
@@ -146,7 +146,7 @@ public:
 
         for(const string &line : remShips)
         {
-            print(line);
+            print(line," ");
         }
     }
 
@@ -161,12 +161,12 @@ public:
         _games.modify(itr,get_self(),[&](game& g){
             eosio_assert(!g.started,"Game is already started");
             user& pl = g.getplayer(playerid);
-            curShips = g.remainingships(pl);
+            curShips = g.currentships(pl);
         });
 
         for(const string& line : curShips)
         {
-            print(line);
+            print(line," ");
         }
 
     }
@@ -639,15 +639,19 @@ private:
             vector<string> retVector;
             uint8_t counter = 0;
             string tmp ;
-            string space = "\t\t\t\t\t\t";
             tmp.append(" ");
             for(uint8_t i = 0; i < 10;i++)
             {
                 tmp += " ";
                 tmp.append(std::to_string(i));
-                tmp += space;
+            }
+
+
+            for(uint8_t i = 0; i < 10;i++)
+            {
                 tmp += " ";
                 tmp.append(std::to_string(i));
+
             }
 
             retVector.emplace_back(tmp);
@@ -660,7 +664,14 @@ private:
                 {
                     tmp += " ";
                     tmp.append(playertable[i*10+j]);
-                    tmp += space;
+
+                }
+                tmp += " ";
+                tmp.append(std::to_string(i));
+
+                for(uint8_t j = 0;j < 10; j++)
+                {
+
                     tmp += " ";
                     tmp.append(enemytable[i*10+j]);
                 }
@@ -669,7 +680,7 @@ private:
             return retVector;
         }
 
-        vector<string> currentships(const user& player)
+        vector<string> remainingships(const user& player)
         {
             vector<string> allships = {"carrier","battleship","submarine","cruiser","destroyer"};
             for(const string &s : player.playertable)
@@ -688,7 +699,7 @@ private:
             return allships;
         }
 
-        vector<string> remainingships(const user& player)
+        vector<string> currentships(const user& player)
         {
             vector<string> remships;
             for(const string &s : player.playertable)
