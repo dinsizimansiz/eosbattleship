@@ -5,7 +5,6 @@
 
 
 #include <eosiolib/eosio.hpp>
-#include <eosiolib/print.hpp>
 #include <eosiolib/multi_index.hpp>
 #include <vector>
 #include <string>
@@ -29,162 +28,6 @@ public:
 
     }
 
-
-
-
-    ///@abi action
-    void version(account_name player)
-    {
-        print("1.0.0");
-    }
-
-    ///@abi action
-    void enqueue(account_name player)
-    {
-        require_auth(player);
-        auto itr = _queue.find(player);
-        eosio_assert(!_ingame(player),"Player is in the game.");
-        eosio_assert(itr == _queue.end(),"Player is already in queue.");
-        _queue.emplace(get_self(),[&](user& us){
-            us.userid = player;
-
-        });
-
-        _creategame();
-    }
-
-    ///@abi action
-    void dequeue(account_name player)
-    {
-        require_auth(player);
-        auto itr = _queue.find(player);
-        eosio_assert(itr != _queue.end(),"Player is not in queue.");
-        eosio_assert(!_ingame(player),"Player is in the game.");
-        _queue.erase(itr);
-    }
-
-    ///@abi action
-    void ingame(account_name player)
-    {
-        require_auth(player);
-        eosio_assert(_ingame(player),"User is in the game.");
-    }
-
-
-
-    ///@abi action
-    void playertable(account_name playerid) {
-
-        require_auth(playerid);
-        eosio_assert(_ingame(playerid),"User is not in a game.");
-        account_name gameid = getgameid(playerid);
-        auto itr = _games.find(gameid);
-        vector<string> table;
-        _games.modify(itr,get_self(),[&](game& g){
-            user& pl = g.getplayer(playerid);
-            table = g.printboard(pl.playertable);
-        });
-        for(const string & line : table)
-        {
-            print(line," ");
-        }
-    }
-
-    ///@abi action
-    void enemytable(account_name playerid) {
-
-        require_auth(playerid);
-        eosio_assert(_ingame(playerid),"User is not in a game.");
-        account_name gameid = getgameid(playerid);
-        auto itr = _games.find(gameid);
-        vector<string> table;
-        _games.modify(itr,get_self(),[&](game& g){
-            user& pl = g.getplayer(playerid);
-            table = g.printboard(pl.enemytable);
-        });
-
-        for(const string& line : table)
-        {
-            print(line," ");
-        }
-    }
-
-    ///@abi action
-    void bothtables(account_name playerid) {
-
-        require_auth(playerid);
-        eosio_assert(_ingame(playerid),"User is not in a game.");
-        account_name gameid = getgameid(playerid);
-        auto itr = _games.find(gameid);
-        vector<string> bothTables;
-        _games.modify(itr,get_self(),[&](game& g){
-            eosio_assert(!g.started,"Game is already started");
-            user& pl = g.getplayer(playerid);
-            bothTables = g.everyboard(pl.playertable,pl.enemytable);
-        });
-
-        for(const string& line : bothTables)
-        {
-            print(line," ");
-        }
-
-    }
-
-    ///@abi action
-    void remships(account_name playerid) {
-
-        require_auth(playerid);
-        eosio_assert(_ingame(playerid),"User is not in a game.");
-        account_name gameid = getgameid(playerid);
-        auto itr = _games.find(gameid);
-        vector<string> remShips;
-        _games.modify(itr,get_self(),[&](game& g){
-            eosio_assert(!g.started,"Game is already started");
-            user& pl = g.getplayer(playerid);
-            remShips = g.remainingships(pl);
-        });
-
-        for(const string &line : remShips)
-        {
-            print(line," ");
-        }
-    }
-
-    ///@abi action
-    void curships(account_name playerid) {
-
-        require_auth(playerid);
-        eosio_assert(_ingame(playerid),"User is not in a game.");
-        account_name gameid = getgameid(playerid);
-        auto itr = _games.find(gameid);
-        vector<string> curShips;
-        _games.modify(itr,get_self(),[&](game& g){
-            eosio_assert(!g.started,"Game is already started");
-            user& pl = g.getplayer(playerid);
-            curShips = g.currentships(pl);
-        });
-
-        for(const string& line : curShips)
-        {
-            print(line," ");
-        }
-
-    }
-
-    ///@abi action
-    void isturn(account_name player)
-    {
-        require_auth(player);
-        eosio_assert(_ingame(player),"Player is not in a game.");
-        account_name gameid = getgameid(player);
-        auto itr = _games.find(gameid);
-        _games.modify(itr,get_self(),[&](game& g) {
-            bool turn;
-            turn = g.isTurn(player);
-            eosio_assert(turn,"It is not player's turn.");
-        });
-    }
-
     ///@abi action
     void placeship(account_name player,string shipname,uint8_t x,uint8_t y,string direction)
     {
@@ -204,21 +47,6 @@ public:
     }
 
     ///@abi action
-    void playing(account_name player)
-    {
-        require_auth(player);
-        eosio_assert(_ingame(player),"Player is not in a game.");
-        account_name gameid = getgameid(player);
-        auto itr = _games.find(gameid);
-        _games.modify(itr,get_self(),[&](game& g){
-           bool gameStarted = g.started;
-           eosio_assert(g.started,"Game is not started.");
-        });
-    }
-
-
-
-    ///@abi action
     void ready(account_name player)
     {
         require_auth(player);
@@ -230,6 +58,7 @@ public:
             eosio_assert(canBeReady,"Player cannot be ready.");
         });
     }
+
     ///@abi action
     void unready(account_name player)
     {
@@ -254,6 +83,7 @@ public:
         auto itr = _games.find(gameid);
         bool flag;
         bool gamefinished;
+
         account_name host,challenger;
         _games.modify(itr,get_self(),[&](game& g){
             eosio_assert(g.started,"Game is not started.");
@@ -270,9 +100,13 @@ public:
 
         if(gamefinished)
         {
-            require_recipient(challenger);
-            require_recipient(host);
-            _games.erase(itr);
+            action(
+                    permission_level{get_self(),N(active)},
+                    N(battleship),
+                    N(destroygame),
+                    std::make_tuple(host,challenger)
+            ).send();
+
         }
 
     }
@@ -300,8 +134,6 @@ public:
     void creategame(account_name host,account_name challenger)
     {
         require_auth(get_self());
-        require_recipient(host);
-        require_recipient(challenger);
         _games.emplace(get_self(),[&](game& g){
             g.started = false;
             g.gameid = _games.available_primary_key();
@@ -314,34 +146,32 @@ public:
         });
     }
 
-private:
-
-    void _creategame()
+    ///@abi action
+    void destroygame(account_name host, account_name challenger)
     {
-        uint8_t counter = 0;
-        vector<account_name> users;
-        for(auto usr : _queue)
-        {
-            counter++;
-            users.emplace_back(usr.userid);
-        }
-        if(counter == 2)
-        {
-            auto hostIter = _queue.find(users[0]);
-            _queue.erase(hostIter);
-            auto challengerIter = _queue.find(users[1]);
-            _queue.erase(challengerIter);
-            action(
+        require_auth(get_self());
+        account_name gameid = getgameid(host);
+        auto itr = _games.find(gameid);
+        game g = _games.get(gameid,"Cannot find");
+        account_name champion = g.getWinner();
+        action(
                 permission_level{get_self(),N(active)},
-                N(game),
-                N(creategame),
-                std::make_tuple(users[0],users[1])
-                    ).send();
-
-        }
+                N(battleship),
+                N(winner),
+                std::make_tuple(champion)
+        ).send();
+        _games.erase(itr);
 
     }
 
+    ///@abi action
+    void winner(account_name winnerid)
+    {
+        require_auth(get_self());
+    }
+
+
+private:
 
     bool _ingame(account_name player)
     {
@@ -404,8 +234,28 @@ private:
 
         }
 
+        account_name getWinner()
+        {
+            if(hitCounter(host.enemytable) == 17)
+            {
+                return host.userid;
+            }
+            else
+            {
+                return challenger.userid;
+            }
+        }
 
-
+        int hitCounter(vector<string> &enemyTable)
+        {
+            int counter = 0;
+            for(int i = 0;i < 100;i++)
+            {
+                if(enemyTable[i] == "1" || enemyTable[i] == "2" || enemyTable[i] == "3" || enemyTable[i] == "4" || enemyTable[i] == "5")
+                    counter++;
+            }
+            return counter;
+        }
 
         void setUnready(account_name player)
         {
@@ -608,114 +458,7 @@ private:
             }
         }
 
-        vector<string> printboard(const vector<string>& vec)
-        {
-            uint8_t counter = 0;
-            string tmp ;
-            vector<string> retVector;
-            tmp.append(" ");
-            for(uint8_t i = 0; i < 10;i++)
-            {
-                tmp += " ";
-                tmp.append(std::to_string(i));
-            }
-            retVector.emplace_back(tmp);
-            for(uint8_t i = 0;i < 10 ; i++)
-            {
-                tmp = "";
-                tmp.append(std::to_string(i));
-                for(uint8_t j = 0;j < 10; j++)
-                {
-                    tmp += " ";
-                    tmp.append(vec[i*10+j]);
-                }
-                retVector.emplace_back(tmp);
-            }
-            return retVector;
-        }
 
-        vector<string> everyboard(const vector<string>& playertable,const vector<string>& enemytable)
-        {
-            vector<string> retVector;
-            uint8_t counter = 0;
-            string tmp ;
-            tmp.append(" ");
-            for(uint8_t i = 0; i < 10;i++)
-            {
-                tmp += " ";
-                tmp.append(std::to_string(i));
-            }
-
-
-            for(uint8_t i = 0; i < 10;i++)
-            {
-                tmp += " ";
-                tmp.append(std::to_string(i));
-
-            }
-
-            retVector.emplace_back(tmp);
-
-            for(uint8_t i = 0;i < 10 ; i++)
-            {
-                tmp = "";
-                tmp.append(std::to_string(i));
-                for(uint8_t j = 0;j < 10; j++)
-                {
-                    tmp += " ";
-                    tmp.append(playertable[i*10+j]);
-
-                }
-                tmp += " ";
-                tmp.append(std::to_string(i));
-
-                for(uint8_t j = 0;j < 10; j++)
-                {
-
-                    tmp += " ";
-                    tmp.append(enemytable[i*10+j]);
-                }
-                retVector.emplace_back(tmp);
-            }
-            return retVector;
-        }
-
-        vector<string> remainingships(const user& player)
-        {
-            vector<string> allships = {"carrier","battleship","submarine","cruiser","destroyer"};
-            for(const string &s : player.playertable)
-            {
-                if(s == "1" || s == "2" || s == "3" || s == "4" || s == "5")
-                {
-                    string shipname = getship(s);
-                    auto itr = find(allships.begin(),allships.end(),shipname);
-                    if(itr != allships.end())
-                    {
-                        allships.erase(itr);
-                    }
-                }
-            }
-
-            return allships;
-        }
-
-        vector<string> currentships(const user& player)
-        {
-            vector<string> remships;
-            for(const string &s : player.playertable)
-            {
-                if(s == "1" || s == "2" || s == "3" || s == "4" || s == "5") {
-                    string shipname = getship(s);
-                    if (find(remships.begin(), remships.end(), shipname) == remships.end()) {
-                        auto itr = find(remships.begin(), remships.end(), shipname);
-                        remships.emplace_back(shipname);
-
-                    }
-                }
-            }
-
-            return remships;
-        }
 
     private:
 
@@ -945,6 +688,5 @@ private:
 
 };
 
-EOSIO_ABI(battleship,(version)(enqueue)(dequeue)(ingame)(placeship)(removeship)(makemove)(isturn)(ready)(unready)(playertable)(enemytable)(bothtables)(remships)(curships)(playing)(creategame));
-    //EOSIO_ABI(battleship,(ready))
+EOSIO_ABI(battleship,(placeship)(removeship)(makemove)(ready)(unready)(destroygame)(creategame)(winner));
 
