@@ -3,7 +3,7 @@
 //
 
 
-
+#include <eosiolib/print.hpp>
 #include <eosiolib/eosio.hpp>
 #include <eosiolib/multi_index.hpp>
 #include <vector>
@@ -133,7 +133,7 @@ public:
     ///@abi action
     void creategame(account_name host,account_name challenger)
     {
-        require_auth(get_self());
+        require_auth(host);
         _games.emplace(get_self(),[&](game& g){
             g.started = false;
             g.gameid = _games.available_primary_key();
@@ -537,7 +537,7 @@ private:
 
             for(string& s : account.playertable)
             {
-                if(s == shipname)
+                if(s == shipstr)
                 {
                     s = "0";
                     flag = true;
